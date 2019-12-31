@@ -1,0 +1,13 @@
+{
+  "name": "js-data-structure",
+  "version": "0.1.0",
+  "description": "Data structure is realized by TS with animation learning",
+  "main": "lib/index.js",
+  "repository": "https://github.com/lhz960904/js-data-structure",
+  "author": "lihaozecq@gmail.com",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc"
+  }
+}
