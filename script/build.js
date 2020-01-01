@@ -3,59 +3,61 @@ const fs = require('fs');
 const path = require('path');
 const typescript = require("@rollup/plugin-typescript");
 
-
+// 忽略的文件夹
 const EXCLUDS_DIRS = ['_util']
 
+const resolve = (str) => path.resolve(__dirname, str)
+
+// linke-list => LinkedList
 const toCamelCase = (str) => {
   return str
     .split("-")
-    .reduce((a, c) =>a + c.substr(0, 1).toLocaleUpperCase() + c.substr(1), "");
+    .reduce((a, c) => a + c.substr(0, 1).toLocaleUpperCase() + c.substr(1), "");
 }
 
-async function run() {
-  const dirs = fs.readdirSync(path.resolve(__dirname, '../src'));
+// 生成需构建的配置数组
+const getBuilds = () => {
+  const dirs = fs.readdirSync(resolve('../src'));
   const builds = [];
-  dirs.forEach(async (name) => {
+
+  dirs.forEach((name) => {
     if (EXCLUDS_DIRS.includes(name)) {
       return
     }
-    builds.push({
-      input: path.resolve(__dirname, `../src/${name}/index.ts`),
-      output: {
-        file: path.resolve(__dirname, `../lib/${name}/index.js`),
-        format: "iife",
-        name: toCamelCase(name)
-      },
+    const inputOpt = {
+      input: resolve(`../src/${name}/index.ts`),
       plugins: [typescript()]
-    });
-    const data = await rollup
-      .rollup({
-        input: path.resolve(__dirname, `../src/${name}/index.ts`),
-        output: {
-          file: path.resolve(__dirname, `../lib/${name}/index.js`),
-          format: "iife",
-          name: toCamelCase(name)
+    }
+    builds.push(
+      {
+        inputOpt,
+        outputOpt: {
+          file: resolve(`../lib/${name}.js`),
+          name: toCamelCase(name),
+          format: "umd"
         },
-        plugins: [typescript()]
-      })
-      .then(bundle =>
-        bundle.generate({
-          file: path.resolve(__dirname, `../lib/${name}/index.js`),
-          format: "iife",
-          name: toCamelCase(name)
-        })
-      );
-      write(path.resolve(__dirname, `../lib/${name}/index.js`), data.output[0].code);
+      },
+      {
+        inputOpt,
+        outputOpt: {
+          file: resolve(`../fragment/${name}.js`),
+          name: toCamelCase(name),
+          format: "iife"
+        },
+      },
+    );
   })
+
+  return builds;
 }
 
-function write(dest, code) {
-  return new Promise((resolve, reject) => {
-    fs.writeFile(dest, code, err => {
-      if (err) return reject(err);
-       resolve();
-    });
-  });
+async function run() {
+  const builds = getBuilds()
+
+  builds.forEach(async (config) => {
+    const bundle = await rollup.rollup(config.inputOpt);
+    await bundle.write(config.outputOpt);
+  })
 }
 
 run();

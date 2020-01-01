@@ -8,12 +8,20 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "commit": "git-cz",
     "build": "node script/build.js"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^2.0.1",
+    "commitizen": "^4.0.3",
+    "cz-conventional-changelog": "^3.0.2",
     "rollup": "^1.27.14",
     "tslib": "^1.10.0",
     "typescript": "^3.7.4"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
   }
 }
