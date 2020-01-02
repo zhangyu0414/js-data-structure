@@ -1,8 +1,8 @@
 // 队列
-import { swap } from '../_util'
+import { swap } from '../_util';
 
 export default class Queue {
   constructor() {
-    swap([], 0, 1)
+    swap([], 0, 1);
   }
 }

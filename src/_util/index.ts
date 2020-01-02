@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+
 /**
  * 交换数组中俩个元素的位置
  * @param array 数组
