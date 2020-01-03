@@ -9,8 +9,7 @@
   "private": true,
   "scripts": {
     "commit": "git-cz",
-    "build": "node script/build.js",
-    "lint": "prettier --write src/**/*.ts"
+    "build": "node script/build.js"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^2.0.1",

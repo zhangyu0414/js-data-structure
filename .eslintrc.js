@@ -21,5 +21,6 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/no-unresolved': 'off',
     'import/extensions': 'off',
+    '@typescript-eslint/no-unused-vars': [2, { args: 'none' }],
   },
 };
