@@ -14,7 +14,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  ignorePatterns: ['fragment/**/*.js', 'lib/**/*.js'],
+  ignorePatterns: ['fragment/**/*.js', 'lib/**/*.js', 'src/**/*.spec.ts'],
   plugins: ['@typescript-eslint'],
   rules: {
     'import/no-extraneous-dependencies': 'off',
@@ -22,5 +22,7 @@ module.exports = {
     'import/no-unresolved': 'off',
     'import/extensions': 'off',
     '@typescript-eslint/no-unused-vars': [2, { args: 'none' }],
+    'max-classes-per-file': 'off',
+    'no-plusplus': 'off',
   },
 };
