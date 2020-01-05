@@ -19,9 +19,14 @@ export default class SingleLinkedList<T> implements LinkedList<T> {
   // 链表中元素的数量
   private size: number;
 
-  constructor() {
+  // 比较是否相等
+  private areEqual: (a: T, b: T) => boolean;
+
+  constructor(areEqual?: (a: T, b: T) => boolean) {
     this.dummyHead = new Node(null!, null);
     this.size = 0;
+    const defaultAreEqual = (a: T, b: T) => a === b;
+    this.areEqual = areEqual || defaultAreEqual;
   }
 
   public isEmpty(): boolean {
@@ -33,9 +38,9 @@ export default class SingleLinkedList<T> implements LinkedList<T> {
   }
 
   public contains(e: T): boolean {
-    let cur: Node<T> | null = this.dummyHead;
+    let cur: Node<T> | null = this.dummyHead.next;
     while (cur !== null) {
-      if (cur.element === e) {
+      if (this.areEqual(cur.element, e)) {
         return true;
       }
       cur = cur.next;
@@ -48,7 +53,7 @@ export default class SingleLinkedList<T> implements LinkedList<T> {
       throw new Error('无效的索引');
     }
     let cur = this.dummyHead.next;
-    for (let i = 0; i < this.size; i++) {
+    for (let i = 0; i < index; i++) {
       cur = cur!.next;
     }
     return cur!.element;
