@@ -9,7 +9,8 @@
   "private": true,
   "scripts": {
     "commit": "git-cz",
-    "build": "node script/build.js"
+    "build": "node script/build.js",
+    "test": "jest"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.7.7",
@@ -28,6 +29,7 @@
     "prettier": "1.19.1",
     "pretty-quick": "^2.0.1",
     "rollup": "^1.27.14",
+    "ts-jest": "^24.2.0",
     "tslib": "^1.10.0",
     "typescript": "^3.7.4"
   },
@@ -42,12 +44,16 @@
     }
   },
   "lint-staged": {
-    "*.{js,css,json,md}": [
+    "*.{ts,js,css,json,md}": [
       "prettier --write",
       "git add"
     ],
-    "*.js": [
+    "src/*.ts": [
       "eslint --fix",
+      "git add"
+    ],
+    "*.spec.ts": [
+      "jest",
       "git add"
     ]
   }
