@@ -1,17 +1,112 @@
 var LinkedList = (function(exports) {
   'use strict';
 
-  var CircularLinkedList = (function() {
-    function CircularLinkedList() {}
-    return CircularLinkedList;
+  var Node = (function() {
+    function Node(element, prev, next) {
+      this.element = element;
+      this.prev = prev;
+      this.next = next;
+    }
+    return Node;
   })();
-
   var DoubleLinkedList = (function() {
-    function DoubleLinkedList() {}
+    function DoubleLinkedList(areEqual) {
+      this.dummyHead = new Node(null, null, null);
+      this.dummyTail = new Node(null, null, null);
+      this.dummyHead.next = this.dummyTail;
+      this.dummyTail.prev = this.dummyHead;
+      this.size = 0;
+      var defaultAreEqual = function(a, b) {
+        return a === b;
+      };
+      this.areEqual = areEqual || defaultAreEqual;
+    }
+    DoubleLinkedList.prototype.isEmpty = function() {
+      return this.size === 0;
+    };
+    DoubleLinkedList.prototype.getSize = function() {
+      return this.size;
+    };
+    DoubleLinkedList.prototype.contains = function(e) {
+      var cur = this.dummyHead.next;
+      while (cur !== null && cur !== this.dummyTail) {
+        if (this.areEqual(cur.element, e)) {
+          return true;
+        }
+        cur = cur.next;
+      }
+      return false;
+    };
+    DoubleLinkedList.prototype.get = function(index) {
+      if (index < 0 || index > this.size - 1) {
+        throw new Error('无效的索引');
+      }
+      var cur = this.dummyHead.next;
+      for (var i = 0; i < index; i++) {
+        cur = cur.next;
+      }
+      return cur.element;
+    };
+    DoubleLinkedList.prototype.getFirst = function() {
+      return this.get(0);
+    };
+    DoubleLinkedList.prototype.getLast = function() {
+      return this.get(this.size - 1);
+    };
+    DoubleLinkedList.prototype.set = function(index, e) {
+      if (index < 0 || index > this.size - 1) {
+        throw new Error('无效的索引');
+      }
+      var cur = this.dummyHead.next;
+      for (var i = 0; i < index; i++) {
+        cur = cur.next;
+      }
+      cur.element = e;
+    };
+    DoubleLinkedList.prototype.add = function(index, e) {
+      if (index < 0 || index > this.size) {
+        throw new Error('无效的索引');
+      }
+      var prevNode = this.dummyHead;
+      for (var i = 0; i < index; i++) {
+        prevNode = prevNode.next;
+      }
+      var newNode = new Node(e, prevNode, prevNode.next);
+      prevNode.next.prev = newNode;
+      prevNode.next = newNode;
+      this.size += 1;
+    };
+    DoubleLinkedList.prototype.addFirst = function(e) {
+      this.add(0, e);
+    };
+    DoubleLinkedList.prototype.addLast = function(e) {
+      this.add(this.size, e);
+    };
+    DoubleLinkedList.prototype.remove = function(index) {
+      if (index < 0 || index > this.size - 1) {
+        throw new Error('无效的索引');
+      }
+      var cur = this.dummyHead.next;
+      for (var i = 0; i < index; i++) {
+        cur = cur.next;
+      }
+      cur.prev.next = cur.next;
+      cur.next.prev = cur.prev;
+      cur.prev = null;
+      cur.next = null;
+      this.size -= 1;
+      return cur.element;
+    };
+    DoubleLinkedList.prototype.removeFirst = function() {
+      return this.remove(0);
+    };
+    DoubleLinkedList.prototype.removeLast = function() {
+      return this.remove(this.size - 1);
+    };
     return DoubleLinkedList;
   })();
 
-  var Node = (function() {
+  var Node$1 = (function() {
     function Node(element, next) {
       this.element = element;
       this.next = next;
@@ -19,9 +114,13 @@ var LinkedList = (function(exports) {
     return Node;
   })();
   var SingleLinkedList = (function() {
-    function SingleLinkedList() {
-      this.dummyHead = new Node(null, null);
+    function SingleLinkedList(areEqual) {
+      this.dummyHead = new Node$1(null, null);
       this.size = 0;
+      var defaultAreEqual = function(a, b) {
+        return a === b;
+      };
+      this.areEqual = areEqual || defaultAreEqual;
     }
     SingleLinkedList.prototype.isEmpty = function() {
       return this.size === 0;
@@ -30,9 +129,9 @@ var LinkedList = (function(exports) {
       return this.size;
     };
     SingleLinkedList.prototype.contains = function(e) {
-      var cur = this.dummyHead;
+      var cur = this.dummyHead.next;
       while (cur !== null) {
-        if (cur.element === e) {
+        if (this.areEqual(cur.element, e)) {
           return true;
         }
         cur = cur.next;
@@ -44,7 +143,7 @@ var LinkedList = (function(exports) {
         throw new Error('无效的索引');
       }
       var cur = this.dummyHead.next;
-      for (var i = 0; i < this.size; i++) {
+      for (var i = 0; i < index; i++) {
         cur = cur.next;
       }
       return cur.element;
@@ -73,7 +172,7 @@ var LinkedList = (function(exports) {
       for (var i = 0; i < index; i++) {
         prev = prev.next;
       }
-      prev.next = new Node(e, prev.next);
+      prev.next = new Node$1(e, prev.next);
       this.size += 1;
     };
     SingleLinkedList.prototype.addFirst = function(e) {
@@ -105,7 +204,6 @@ var LinkedList = (function(exports) {
     return SingleLinkedList;
   })();
 
-  exports.CircularLinkedList = CircularLinkedList;
   exports.DoubleLinkedList = DoubleLinkedList;
   exports.SingleLinkedList = SingleLinkedList;
 
