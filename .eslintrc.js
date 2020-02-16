@@ -24,5 +24,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': [2, { args: 'none' }],
     'max-classes-per-file': 'off',
     'no-plusplus': 'off',
+    'no-underscore-dangle': 'off',
+    'no-param-reassign': 'off',
   },
 };
